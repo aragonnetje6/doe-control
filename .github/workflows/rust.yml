@@ -16,10 +16,36 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build
       working-directory: ./doe-control-server
-      run: cargo build --verbose
+      run: cargo build
     - name: Run tests
       working-directory: ./doe-control-server
-      run: cargo test --verbose
+      run: cargo test
     - name: Run clippy
       working-directory: ./doe-control-server
-      run: cargo clippy --verbose
+      run: cargo clippy
+  client:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      working-directory: ./doe-control-client
+      run: cargo build
+    - name: Run tests
+      working-directory: ./doe-control-client
+      run: cargo test
+    - name: Run clippy
+      working-directory: ./doe-control-client
+      run: cargo clippy
+  admin:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build
+      working-directory: ./doe-control-admin
+      run: cargo build
+    - name: Run tests
+      working-directory: ./doe-control-admin
+      run: cargo test
+    - name: Run clippy
+      working-directory: ./doe-control-admin
+      run: cargo clippy
