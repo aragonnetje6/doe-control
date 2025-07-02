@@ -5,7 +5,7 @@
   "identifier": "com.grace.doe-control-client",
   "build": {
     "beforeDevCommand": "trunk serve",
-    "devUrl": "http://localhost:1420",
+    "devUrl": "http://localhost:14269",
     "beforeBuildCommand": "trunk build",
     "frontendDist": "../dist"
   },
