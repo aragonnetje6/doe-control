@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic, clippy::unwrap_used, clippy::nursery)]
+
 use tauri_plugin_http::reqwest;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/

@@ -1,5 +1,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
-#![allow(rustdoc::missing_crate_level_docs)] // it's an example
+#![warn(clippy::pedantic, clippy::unwrap_used, clippy::nursery)]
 
 use eframe::egui;
 
@@ -11,7 +11,7 @@ fn main() -> eframe::Result {
     eframe::run_native(
         "My egui App",
         options,
-        Box::new(|cc| {
+        Box::new(|_cc| {
             // This gives us image support:
 
             Ok(Box::<MyApp>::default())

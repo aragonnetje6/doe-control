@@ -1,6 +1,8 @@
+#![warn(clippy::pedantic, clippy::unwrap_used, clippy::nursery)]
+
 mod app;
 
-use app::*;
+use app::App;
 use leptos::prelude::*;
 
 fn main() {
@@ -9,5 +11,5 @@ fn main() {
         view! {
             <App/>
         }
-    })
+    });
 }

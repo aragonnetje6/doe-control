@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic, clippy::unwrap_used, clippy::nursery)]
+
 use actix_web::{get, web};
 use serde::Deserialize;
 use shuttle_actix_web::ShuttleActixWeb;
@@ -18,6 +20,7 @@ async fn greet2(name: web::Query<Name>) -> String {
     format!("Hello from Miss Grace' server, {}!", name.name)
 }
 
+#[allow(clippy::unused_async)]
 #[shuttle_runtime::main]
 async fn main() -> ShuttleActixWeb<impl FnOnce(&mut web::ServiceConfig) + Send + Clone + 'static> {
     let config = move |cfg: &mut web::ServiceConfig| {
