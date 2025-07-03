@@ -10,42 +10,32 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  server:
+  build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - name: Build
-      working-directory: ./doe-control-server
-      run: cargo build
-    - name: Run tests
-      working-directory: ./doe-control-server
-      run: cargo test
-    - name: Run clippy
-      working-directory: ./doe-control-server
-      run: cargo clippy
-  client:
+      run: PUBLIC_KEY={{ secrets.PUBLIC_KEY }} PRIVATE_KEY={{ secrets.PRIVATE_KEY }} REMOTE_ADDRESS={{ secrets.REMOTE_ADDRESS }} cargo build
+  test:
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      working-directory: ./doe-control-client
-      run: cargo build
     - name: Run tests
-      working-directory: ./doe-control-client
-      run: cargo test
-    - name: Run clippy
-      working-directory: ./doe-control-client
-      run: cargo clippy
-  admin:
+      run: PUBLIC_KEY={{ secrets.PUBLIC_KEY }} PRIVATE_KEY={{ secrets.PRIVATE_KEY }} REMOTE_ADDRESS={{ secrets.REMOTE_ADDRESS }} cargo test
+  clippy:
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - uses: actions/checkout@v4
-    - name: Build
-      working-directory: ./doe-control-admin
-      run: cargo build
-    - name: Run tests
-      working-directory: ./doe-control-admin
-      run: cargo test
     - name: Run clippy
-      working-directory: ./doe-control-admin
-      run: cargo clippy
+      run: PUBLIC_KEY={{ secrets.PUBLIC_KEY }} PRIVATE_KEY={{ secrets.PRIVATE_KEY }} REMOTE_ADDRESS={{ secrets.REMOTE_ADDRESS }} cargo clippy
+  shuttle-deploy:
+    runs-on: ubuntu-latest
+    needs: [build, test, clippy]
+    steps:
+    - uses: actions/checkout@v4
+    - working_directory: ./doe-control-server
+    - name: Run shuttle login
+      run: cargo shuttle login --api-key {{ secrets.SHUTTLE_API_KEY }}
+      run: PUBLIC_KEY={{ secrets.PUBLIC_KEY }} PRIVATE_KEY={{ secrets.PRIVATE_KEY }} REMOTE_ADDRESS={{ secrets.REMOTE_ADDRESS }} cargo shuttle deploy --no-follow --name {{ secrets.SHUTTLE_PROJECT_ID }}
