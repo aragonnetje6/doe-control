@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 #![warn(clippy::pedantic, clippy::unwrap_used, clippy::nursery)]
 
+use dotenv_codegen::dotenv;
 use eframe::egui;
 
 fn main() -> eframe::Result {
@@ -47,6 +48,7 @@ impl eframe::App for MyApp {
                 self.age += 1;
             }
             ui.label(format!("Hello '{}', age {}", self.name, self.age));
+            ui.label(dotenv!("REMOTE_ADDRESS"))
         });
     }
 }
