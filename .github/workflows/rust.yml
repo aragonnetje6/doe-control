@@ -15,21 +15,21 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build
-      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo build -p doe-control-server -p doe-control-server/src-tauri -p doe-control-admin
+      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo build -p doe-control-server -p doe-control-client -p doe-control-admin
   test:
     runs-on: ubuntu-latest
     needs: build
     steps:
     - uses: actions/checkout@v4
     - name: Run tests
-      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo test -p doe-control-server -p doe-control-server/src-tauri -p doe-control-admin
+      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo test -p doe-control-server -p doe-control-client -p doe-control-admin
   clippy:
     runs-on: ubuntu-latest
     needs: build
     steps:
     - uses: actions/checkout@v4
     - name: Run clippy
-      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo clippy -p doe-control-server -p doe-control-server/src-tauri -p doe-control-admin
+      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo clippy -p doe-control-server -p doe-control-client -p doe-control-admin
   shuttle-deploy:
     runs-on: ubuntu-latest
     needs: [build, test, clippy]
