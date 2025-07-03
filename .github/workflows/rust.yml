@@ -10,32 +10,26 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  deps:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install dependencies
-        run: sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev libglib2.0-dev
   build:
     runs-on: ubuntu-latest
-    needs: deps
     steps:
     - uses: actions/checkout@v4
     - name: Build
-      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo build
+      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo build -p doe-control-server -p doe-control-server/src-tauri -p doe-control-admin
   test:
     runs-on: ubuntu-latest
     needs: build
     steps:
     - uses: actions/checkout@v4
     - name: Run tests
-      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo test
+      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo test -p doe-control-server -p doe-control-server/src-tauri -p doe-control-admin
   clippy:
     runs-on: ubuntu-latest
     needs: build
     steps:
     - uses: actions/checkout@v4
     - name: Run clippy
-      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo clippy
+      run: PUBLIC_KEY="${{ secrets.PUBLIC_KEY }}" PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" REMOTE_ADDRESS="${{ secrets.REMOTE_ADDRESS }}" cargo clippy -p doe-control-server -p doe-control-server/src-tauri -p doe-control-admin
   shuttle-deploy:
     runs-on: ubuntu-latest
     needs: [build, test, clippy]
