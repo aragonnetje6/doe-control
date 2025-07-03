@@ -1,1 +1,3 @@
 doe-control-admin/.env
+doe-control-server/.env
+doe-control-client/.env

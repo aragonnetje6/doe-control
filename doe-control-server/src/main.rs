@@ -1,6 +1,7 @@
 #![warn(clippy::pedantic, clippy::unwrap_used, clippy::nursery)]
 
 use actix_web::{get, web};
+use dotenv_codegen::dotenv;
 use serde::Deserialize;
 use shuttle_actix_web::ShuttleActixWeb;
 

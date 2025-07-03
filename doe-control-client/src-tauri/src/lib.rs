@@ -1,8 +1,8 @@
 #![warn(clippy::pedantic, clippy::unwrap_used, clippy::nursery)]
 
+use dotenv_codegen::dotenv;
 use tauri_plugin_http::reqwest;
 
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 #[tauri::command]
 fn greet(name: &str) -> String {
     if name.to_lowercase() == "doe" {
@@ -14,14 +14,12 @@ fn greet(name: &str) -> String {
 
 #[tauri::command]
 async fn greet2(name: &str) -> Result<String, ()> {
-    let result = reqwest::get(format!(
-        "https://doe-control-server-fvte.shuttle.app/greet2/?name={name}"
-    ))
-    .await
-    .unwrap()
-    .text()
-    .await
-    .unwrap();
+    let result = reqwest::get(format!("{}greet2/?name={name}", dotenv!("REMOTE_ADDRESS")))
+        .await
+        .unwrap()
+        .text()
+        .await
+        .unwrap();
     Ok(result)
 }
 
