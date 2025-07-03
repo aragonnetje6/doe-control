@@ -9,10 +9,6 @@ on:
 env:
   CARGO_TERM_COLOR: always
 
-defaults:
-  run:
-    shell: bash
-
 jobs:
   deps:
     runs-on: ubuntu-latest
@@ -21,6 +17,7 @@ jobs:
         run: sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
   build:
     runs-on: ubuntu-latest
+    needs: deps
     steps:
     - uses: actions/checkout@v4
     - name: Build
