@@ -36,6 +36,5 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Run shuttle login
-      working_directory: ./doe-control-server
-      run: cargo shuttle login --api-key {{ secrets.SHUTTLE_API_KEY }}
-      run: PUBLIC_KEY={{ secrets.PUBLIC_KEY }} PRIVATE_KEY={{ secrets.PRIVATE_KEY }} REMOTE_ADDRESS={{ secrets.REMOTE_ADDRESS }} cargo shuttle deploy --no-follow --name {{ secrets.SHUTTLE_PROJECT_ID }}
+      working-directory: ./doe-control-server
+      run: cargo shuttle login --api-key {{ secrets.SHUTTLE_API_KEY }} && PUBLIC_KEY={{ secrets.PUBLIC_KEY }} PRIVATE_KEY={{ secrets.PRIVATE_KEY }} REMOTE_ADDRESS={{ secrets.REMOTE_ADDRESS }} cargo shuttle deploy --no-follow --name {{ secrets.SHUTTLE_PROJECT_ID }}
