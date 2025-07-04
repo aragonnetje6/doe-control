@@ -4,10 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4.3.1"
-dotenv_codegen = "0.15.0"
+actix-web = "4.11.0"
 serde = { version = "1.0.219", features = ["derive"] }
-shuttle-actix-web = "0.55.0"
-shuttle-runtime = "0.55.0"
-tokio = "1.26.0"
+shuttle-actix-web = "0.56.0"
+shuttle-runtime = "0.56.0"
+shuttle-shared-db = { version = "0.56.0", features = ["sqlx", "postgres"] }
+sqlx = { version = "0.8.6", features = ["chrono", "derive", "json", "macros", "migrate"] }
+tokio = "1.46.0"
 tracing = "0.1.41"
