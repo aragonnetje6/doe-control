@@ -1,6 +1,6 @@
 #![warn(clippy::pedantic, clippy::unwrap_used, clippy::nursery)]
 
-use actix_web::{get, web};
+use actix_web::{get, post, web};
 use askama::Template;
 use serde::Deserialize;
 use shuttle_actix_web::ShuttleActixWeb;
@@ -33,10 +33,37 @@ impl<'a, T: Template> BaseTemplate<'a, T> {
 #[get("/")]
 async fn hello_world() -> web::Html {
     web::Html::new(
-        BaseTemplate::new("Main Page", HelloWorldTemplate::new("Hello world!"))
+        BaseTemplate::new("DoeControl", HelloWorldTemplate::new("Hello world!"))
             .render()
             .expect("infallible"),
     )
+}
+
+#[derive(Debug, Template)]
+#[template(path = "login.html")]
+struct LoginTemplate;
+
+#[get("/login")]
+async fn login() -> web::Html {
+    web::Html::new(
+        BaseTemplate::new("DoeControl Login", LoginTemplate)
+            .render()
+            .expect("infallible"),
+    )
+}
+
+#[derive(Debug, Deserialize)]
+struct Login {
+    password: String,
+}
+
+#[post("/login")]
+async fn login_post(password: web::Form<Login>) -> web::Html {
+    if password.password == "hello" {
+        web::Html::new("Well done!")
+    } else {
+        web::Html::new("Wrong password")
+    }
 }
 
 #[derive(Deserialize)]
@@ -78,10 +105,9 @@ async fn main(
     let config = move |cfg: &mut web::ServiceConfig| {
         cfg.service(hello_world)
             .service(greet2)
-            .service(
-                actix_files::Files::new("/assets", "./doe-control-server/assets")
-                    .show_files_listing(),
-            )
+            .service(login)
+            .service(login_post)
+            .service(actix_files::Files::new("/assets", "./assets").show_files_listing())
             .app_data(web::Data::new(pool));
     };
 
