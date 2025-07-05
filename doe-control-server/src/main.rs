@@ -17,10 +17,23 @@ impl<'a> HelloWorldTemplate<'a> {
     }
 }
 
+#[derive(Debug, Template)]
+#[template(path = "base.html", escape = "none")]
+struct BaseTemplate<'a, T: Template> {
+    title: &'a str,
+    body: T,
+}
+
+impl<'a, T: Template> BaseTemplate<'a, T> {
+    const fn new(title: &'a str, body: T) -> Self {
+        Self { title, body }
+    }
+}
+
 #[get("/")]
 async fn hello_world() -> web::Html {
     web::Html::new(
-        HelloWorldTemplate::new("Hello world!")
+        BaseTemplate::new("Main Page", HelloWorldTemplate::new("Hello world!"))
             .render()
             .expect("infallible"),
     )
@@ -47,7 +60,7 @@ impl<'a> Greet2Template<'a> {
 async fn greet2(name: web::Query<Name>) -> web::Html {
     tracing::info!("greeting {}", name.name);
     web::Html::new(
-        Greet2Template::new(&name.name)
+        BaseTemplate::new("Greet2", Greet2Template::new(&name.name))
             .render()
             .expect("infallible"),
     )
@@ -65,6 +78,10 @@ async fn main(
     let config = move |cfg: &mut web::ServiceConfig| {
         cfg.service(hello_world)
             .service(greet2)
+            .service(
+                actix_files::Files::new("/assets", "./doe-control-server/assets")
+                    .show_files_listing(),
+            )
             .app_data(web::Data::new(pool));
     };
 
