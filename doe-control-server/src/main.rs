@@ -102,12 +102,20 @@ async fn main(
         .run(&pool)
         .await
         .expect("Failed to run migrations");
+    tracing::info!(
+        "{:?}",
+        std::fs::read_dir(".")
+            .unwrap()
+            .map(|entry| entry.unwrap().path())
+            .collect::<Vec<_>>()
+    );
+    tracing::info!("{:?}", std::env::current_dir());
     let config = move |cfg: &mut web::ServiceConfig| {
         cfg.service(hello_world)
             .service(greet2)
             .service(login)
             .service(login_post)
-            .service(actix_files::Files::new("/assets", "./assets").show_files_listing())
+            .service(actix_files::Files::new("/assets", "assets").show_files_listing())
             .app_data(web::Data::new(pool));
     };
 
