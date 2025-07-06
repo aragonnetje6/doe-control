@@ -1,17 +1,8 @@
 use std::future::{ready, Ready};
 
-use actix_web::{cookie, FromRequest, ResponseError};
+use actix_web::{cookie, FromRequest};
 
-#[derive(Debug, thiserror::Error)]
-struct CookieParsingError(#[from] cookie::ParseError);
-
-impl ResponseError for CookieParsingError {}
-
-impl std::fmt::Display for CookieParsingError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        std::fmt::Display::fmt(&self.0, f)
-    }
-}
+use super::cookie_parsing_error::CookieParsingError;
 
 struct CookieJar(cookie::CookieJar);
 
@@ -24,7 +15,7 @@ impl FromRequest for CookieJar {
         let mut jar = cookie::CookieJar::new();
         let cookies = match req.cookies() {
             Ok(cookies) => cookies,
-            Err(err) => return ready(Err(CookieParsingError(err))),
+            Err(err) => return ready(Err(CookieParsingError::from(err))),
         };
         for cookie in cookies.iter() {
             jar.add_original(cookie.clone());
