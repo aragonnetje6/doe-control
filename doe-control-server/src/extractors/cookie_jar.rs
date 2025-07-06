@@ -6,6 +6,28 @@ use super::cookie_parsing_error::CookieParsingError;
 
 pub struct CookieJar(cookie::CookieJar);
 
+impl CookieJar {
+    #[must_use]
+    pub fn signed(&self, key: &cookie::Key) -> cookie::SignedJar<&cookie::CookieJar> {
+        self.0.signed(key)
+    }
+
+    #[must_use]
+    pub fn signed_mut(&mut self, key: &cookie::Key) -> cookie::SignedJar<&mut cookie::CookieJar> {
+        self.0.signed_mut(key)
+    }
+
+    #[must_use]
+    pub fn private(&self, key: &cookie::Key) -> cookie::PrivateJar<&cookie::CookieJar> {
+        self.0.private(key)
+    }
+
+    #[must_use]
+    pub fn private_mut(&mut self, key: &cookie::Key) -> cookie::PrivateJar<&mut cookie::CookieJar> {
+        self.0.private_mut(key)
+    }
+}
+
 impl std::ops::Deref for CookieJar {
     type Target = cookie::CookieJar;
 
