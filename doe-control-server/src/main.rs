@@ -2,8 +2,6 @@
 
 pub mod extractors;
 
-use std::future::{ready, Ready};
-
 use actix_web::{get, post, web};
 use askama::Template;
 use serde::Deserialize;
@@ -35,55 +33,7 @@ impl<'a, T: Template> BaseTemplate<'a, T> {
 }
 
 #[get("/")]
-async fn hello_world(admin: Admin) -> web::Html {
-    web::Html::new(
-        BaseTemplate::new("DoeControl", HelloWorldTemplate::new("Hello world!"))
-            .render()
-            .expect("infallible"),
-    )
-}
-
-#[derive(Debug, Clone, thiserror::Error, strum::Display)]
-enum AuthError {
-    NoCookie,
-    WrongCookie,
-}
-
-impl actix_web::ResponseError for AuthError {
-    fn status_code(&self) -> actix_web::http::StatusCode {
-        actix_web::http::StatusCode::UNAUTHORIZED
-    }
-}
-
-#[derive(Debug)]
-struct Admin {
-    name: String,
-}
-
-impl actix_web::FromRequest for Admin {
-    type Error = AuthError;
-
-    type Future = Ready<Result<Self, AuthError>>;
-
-    fn from_request(
-        req: &actix_web::HttpRequest,
-        _payload: &mut actix_web::dev::Payload,
-    ) -> Self::Future {
-        // let mut jar = CookieJar::new();
-        // let cookie = req.cookie("admin_key")
-        // jar.add_original();
-        ready(
-            req.cookie("admin_key")
-                .ok_or(AuthError::NoCookie)
-                .map(|cookie| Self {
-                    name: cookie.value().to_string(),
-                }),
-        )
-    }
-}
-
-#[get("/")]
-async fn not_logged_in() -> web::Html {
+async fn hello_world() -> web::Html {
     web::Html::new(
         BaseTemplate::new("DoeControl", HelloWorldTemplate::new("Hello world!"))
             .render()

@@ -1,6 +1,6 @@
 use actix_web::{cookie, ResponseError};
 
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, thiserror::Error, Clone)]
 pub struct CookieParsingError(#[from] cookie::ParseError);
 
 impl ResponseError for CookieParsingError {
