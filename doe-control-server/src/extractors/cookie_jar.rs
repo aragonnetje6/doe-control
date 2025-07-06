@@ -4,7 +4,15 @@ use actix_web::{cookie, FromRequest};
 
 use super::cookie_parsing_error::CookieParsingError;
 
-struct CookieJar(cookie::CookieJar);
+pub struct CookieJar(cookie::CookieJar);
+
+impl std::ops::Deref for CookieJar {
+    type Target = cookie::CookieJar;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
 
 impl FromRequest for CookieJar {
     type Error = CookieParsingError;
